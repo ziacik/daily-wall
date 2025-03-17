@@ -1,0 +1,26 @@
+{
+  "name": "@dwall/dwall-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "dwall-e2e",
+    "implicitDependencies": [
+      "dwall"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/dwall-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "dwall:build"
+        ]
+      }
+    }
+  }
+}

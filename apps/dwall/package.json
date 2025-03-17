@@ -1,0 +1,71 @@
+{
+  "name": "@dwall/dwall",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "dwall",
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "apps/dwall/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "apps/dwall/src/main.ts",
+          "tsConfig": "apps/dwall/tsconfig.app.json",
+          "assets": [
+            "apps/dwall/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "dwall:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "dwall:build:development"
+          },
+          "production": {
+            "buildTarget": "dwall:build:production"
+          }
+        }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
+}
