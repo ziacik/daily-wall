@@ -1,8 +1,9 @@
-import {setWallpaper} from "wallpaper";
+// import {setWallpaper} from "wallpaper";
 import OpenAI from "openai";
 import fs from 'fs';
 import axios from 'axios';
 import path from 'path';
+import terminalImage from "terminal-image";
 
 const openai = new OpenAI();
 
@@ -30,7 +31,9 @@ async function main() {
       writer.on('error', reject);
     });
 
-    await setWallpaper(imagePath);
+    console.log(await terminalImage.file(imagePath));
+
+    // await setWallpaper(imagePath);
   }
 
   console.log(image.data);
