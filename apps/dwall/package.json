@@ -2,6 +2,7 @@
   "name": "@dwall/dwall",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "nx": {
     "name": "dwall",
     "targets": {
@@ -15,7 +16,7 @@
           "platform": "node",
           "outputPath": "apps/dwall/dist",
           "format": [
-            "cjs"
+            "esm"
           ],
           "bundle": false,
           "main": "apps/dwall/src/main.ts",
