@@ -1,13 +1,13 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
-  "files": [],
-  "references": [
-    {
-      "path": "./apps/dwall-e2e"
-    },
-    {
-      "path": "./apps/dwall"
-    }
-  ]
+	"extends": "./tsconfig.base.json",
+	"compileOnSave": false,
+	"files": [],
+	"references": [
+		{
+			"path": "./apps/dwall-e2e"
+		},
+		{
+			"path": "./apps/dwall"
+		}
+	]
 }
