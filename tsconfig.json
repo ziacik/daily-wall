@@ -4,10 +4,10 @@
 	"files": [],
 	"references": [
 		{
-			"path": "./apps/dwall-e2e"
+			"path": "./apps/daily-wall-e2e"
 		},
 		{
-			"path": "./apps/dwall"
+			"path": "./apps/daily-wall"
 		}
 	]
 }

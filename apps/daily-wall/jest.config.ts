@@ -10,7 +10,7 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 export default {
-	displayName: 'dwall',
+	displayName: 'daily-wall',
 	preset: '../../jest.preset.js',
 	testEnvironment: 'node',
 	transform: {

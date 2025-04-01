@@ -41,7 +41,7 @@
 			"options": {
 				"targetName": "test"
 			},
-			"exclude": ["apps/dwall-e2e/**/*"]
+			"exclude": ["apps/daily-wall-e2e/**/*"]
 		}
 	],
 	"targetDefaults": {

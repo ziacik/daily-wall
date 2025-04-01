@@ -1,10 +1,10 @@
 {
-	"name": "@dwall/dwall",
+	"name": "@ziacik/daily-wall",
 	"version": "0.0.1",
 	"private": true,
 	"type": "module",
 	"nx": {
-		"name": "dwall",
+		"name": "daily-wall",
 		"targets": {
 			"build": {
 				"executor": "@nx/esbuild:esbuild",
@@ -14,15 +14,15 @@
 				"defaultConfiguration": "production",
 				"options": {
 					"platform": "node",
-					"outputPath": "apps/dwall/dist",
+					"outputPath": "apps/daily-wall/dist",
 					"format": [
 						"esm"
 					],
 					"bundle": false,
-					"main": "apps/dwall/src/main.ts",
-					"tsConfig": "apps/dwall/tsconfig.app.json",
+					"main": "apps/daily-wall/src/main.ts",
+					"tsConfig": "apps/daily-wall/tsconfig.app.json",
 					"assets": [
-						"apps/dwall/src/assets"
+						"apps/daily-wall/src/assets"
 					],
 					"esbuildOptions": {
 						"sourcemap": true,
@@ -50,15 +50,15 @@
 					"build"
 				],
 				"options": {
-					"buildTarget": "dwall:build",
+					"buildTarget": "daily-wall:build",
 					"runBuildTargetDependencies": false
 				},
 				"configurations": {
 					"development": {
-						"buildTarget": "dwall:build:development"
+						"buildTarget": "daily-wall:build:development"
 					},
 					"production": {
-						"buildTarget": "dwall:build:production"
+						"buildTarget": "daily-wall:build:production"
 					}
 				}
 			},
