@@ -22,7 +22,9 @@ async function main() {
 	if (image.data[0].url) {
 		// download the image to file
 		const imageUrl = image.data[0].url;
-		const imagePath = path.resolve('./wallpaper.jpg');
+
+		const currentDate = new Date().toISOString().split('T')[0];
+		const imagePath = path.resolve(`./daily-wall-${currentDate}.jpg`);
 		const writer = fs.createWriteStream(imagePath);
 
 		const response = await axios({
