@@ -3,6 +3,9 @@
 	"version": "0.0.1",
 	"private": true,
 	"type": "module",
+	"bin": {
+		"daily-wall": "main.js"
+	},
 	"nx": {
 		"name": "daily-wall",
 		"targets": {
@@ -22,7 +25,8 @@
 					"main": "apps/daily-wall/src/main.ts",
 					"tsConfig": "apps/daily-wall/tsconfig.app.json",
 					"assets": [
-						"apps/daily-wall/src/assets"
+						"apps/daily-wall/src/assets",
+						"apps/daily-wall/package.json"
 					],
 					"esbuildOptions": {
 						"sourcemap": true,

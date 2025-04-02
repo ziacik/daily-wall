@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import axios from 'axios';
 import fs from 'fs';
 import OpenAI from 'openai';
