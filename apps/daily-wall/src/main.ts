@@ -14,7 +14,7 @@ async function main() {
 		model: 'dall-e-3',
 		size: '1792x1024',
 		prompt:
-			"Generate a colorful wallpaper featuring a photorealistic character designed with a style inspired by anime. The character is a young girl with large, expressive eyes and long hair styled in soft waves. She is dressed in a cute dress and her pose is random. The girl's layer is small and features her entire body, placed on a clean, spacious background.",
+			"Generate a colorful wallpaper featuring a photorealistic character designed with a style inspired by anime. The character is a young girl with large, expressive eyes and long hair styled in soft waves. She is dressed in a cute dress and her pose is random. The girl's layer is small and features her entire body, placed on a clean, spacious background, maybe on the side of it. The background should have a nice color.",
 	});
 
 	console.log(image);
