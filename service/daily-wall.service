@@ -1,0 +1,14 @@
+[Unit]
+Description=Daily Wallpaper
+After=NetworkManager-wait-online.service
+Wants=NetworkManager-wait-online.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/nm-online -q
+ExecStart=daily-wall
+Environment=OPENAI_API_KEY=???
+WorkingDirectory=???
+
+[Install]
+WantedBy=default.target
