@@ -1,12 +1,11 @@
 [Unit]
-Description=Daily Wallpaper
+Description=AI Wallpaper
 After=NetworkManager-wait-online.service
 Wants=NetworkManager-wait-online.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/usr/bin/nm-online -q
-ExecStart=daily-wall
+ExecStart=ai-wallpaper
 Environment=OPENAI_API_KEY=???
 WorkingDirectory=???
 

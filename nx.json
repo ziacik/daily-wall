@@ -41,7 +41,7 @@
 			"options": {
 				"targetName": "test"
 			},
-			"exclude": ["apps/daily-wall-e2e/**/*"]
+			"exclude": ["apps/ai-wallpaper-e2e/**/*"]
 		}
 	],
 	"targetDefaults": {

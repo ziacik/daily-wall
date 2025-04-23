@@ -1,13 +1,13 @@
 {
-	"name": "@ziacik/daily-wall",
-	"version": "0.0.1",
+	"name": "ai-wallpaper",
+	"version": "1.0.0",
 	"private": true,
 	"type": "module",
 	"bin": {
-		"daily-wall": "main.js"
+		"ai-wallpaper": "main.js"
 	},
 	"nx": {
-		"name": "daily-wall",
+		"name": "ai-wallpaper",
 		"targets": {
 			"build": {
 				"executor": "@nx/esbuild:esbuild",
@@ -17,16 +17,16 @@
 				"defaultConfiguration": "production",
 				"options": {
 					"platform": "node",
-					"outputPath": "apps/daily-wall/dist",
+					"outputPath": "ai-wallpaper/dist",
 					"format": [
 						"esm"
 					],
 					"bundle": false,
-					"main": "apps/daily-wall/src/main.ts",
-					"tsConfig": "apps/daily-wall/tsconfig.app.json",
+					"main": "ai-wallpaper/src/main.ts",
+					"tsConfig": "ai-wallpaper/tsconfig.app.json",
 					"assets": [
-						"apps/daily-wall/src/assets",
-						"apps/daily-wall/package.json"
+						"ai-wallpaper/src/assets",
+						"ai-wallpaper/package.json"
 					],
 					"esbuildOptions": {
 						"sourcemap": true,
@@ -54,15 +54,15 @@
 					"build"
 				],
 				"options": {
-					"buildTarget": "daily-wall:build",
+					"buildTarget": "ai-wallpaper:build",
 					"runBuildTargetDependencies": false
 				},
 				"configurations": {
 					"development": {
-						"buildTarget": "daily-wall:build:development"
+						"buildTarget": "ai-wallpaper:build:development"
 					},
 					"production": {
-						"buildTarget": "daily-wall:build:production"
+						"buildTarget": "ai-wallpaper:build:production"
 					}
 				}
 			},

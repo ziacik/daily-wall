@@ -1,5 +1,5 @@
 [Unit]
-Description=Run daily wallpaper every day
+Description=Run AI wallpaper generator every day
 
 [Timer]
 OnCalendar=daily

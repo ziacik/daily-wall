@@ -44,7 +44,7 @@ async function main() {
 		const imageUrl = image.data[0].url;
 
 		const currentDate = new Date().toISOString().split('T')[0];
-		const imagePath = path.resolve(`./daily-wall-${currentDate}.jpg`);
+		const imagePath = path.resolve(`./ai-wallpaper-${currentDate}.jpg`);
 		const writer = fs.createWriteStream(imagePath);
 
 		const response = await retryAsync(() =>

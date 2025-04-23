@@ -10,12 +10,13 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 export default {
-	displayName: 'daily-wall',
-	preset: '../../jest.preset.js',
+	displayName: 'ai-wallpaper',
+	preset: '../jest.preset.js',
 	testEnvironment: 'node',
 	transform: {
 		'^.+\\.[tj]s$': ['@swc/jest', swcJestConfig],
 	},
+	transformIgnorePatterns: [],
 	moduleFileExtensions: ['ts', 'js', 'html'],
 	coverageDirectory: 'test-output/jest/coverage',
 };
