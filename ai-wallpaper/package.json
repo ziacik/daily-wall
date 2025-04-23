@@ -1,11 +1,13 @@
 {
 	"name": "ai-wallpaper",
-	"version": "1.0.0",
-	"private": true,
+	"version": "0.0.1",
 	"type": "module",
 	"bin": {
-		"ai-wallpaper": "main.js"
+		"ai-wallpaper": "dist/main.js"
 	},
+	"files": [
+		"dist"
+	],
 	"nx": {
 		"name": "ai-wallpaper",
 		"targets": {
@@ -21,12 +23,16 @@
 					"format": [
 						"esm"
 					],
-					"bundle": false,
+					"bundle": true,
 					"main": "ai-wallpaper/src/main.ts",
 					"tsConfig": "ai-wallpaper/tsconfig.app.json",
 					"assets": [
 						"ai-wallpaper/src/assets",
-						"ai-wallpaper/package.json"
+						{
+							"glob": "package.json",
+							"input": "ai-wallpaper",
+							"output": "."
+						}
 					],
 					"esbuildOptions": {
 						"sourcemap": true,
