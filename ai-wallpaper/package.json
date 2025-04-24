@@ -1,6 +1,6 @@
 {
 	"name": "ai-wallpaper",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "AI-powered wallpaper generator",
 	"type": "module",
 	"bin": {
@@ -9,7 +9,11 @@
 	"files": [
 		"dist"
 	],
-	"dependencies": {},
+	"dependencies": {
+		"axios": "^1.6.0",
+		"openai": "^4.87.3",
+		"wallpaper": "^7.2.1"
+	},
 	"keywords": [
 		"wallpaper",
 		"ai",
