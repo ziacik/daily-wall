@@ -1,6 +1,7 @@
 {
 	"name": "ai-wallpaper",
 	"version": "0.0.1",
+	"description": "AI-powered wallpaper generator",
 	"type": "module",
 	"bin": {
 		"ai-wallpaper": "dist/main.js"
@@ -8,6 +9,21 @@
 	"files": [
 		"dist"
 	],
+	"dependencies": {},
+	"keywords": [
+		"wallpaper",
+		"ai",
+		"openai"
+	],
+	"author": "ziacik",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ziacik/ai-wallpaper.git"
+	},
 	"nx": {
 		"name": "ai-wallpaper",
 		"targets": {
@@ -75,6 +91,14 @@
 			"test": {
 				"options": {
 					"passWithNoTests": true
+				}
+			},
+			"nx-release-publish": {
+				"dependsOn": [
+					"build"
+				],
+				"options": {
+					"packageRoot": "ai-wallpaper/dist"
 				}
 			}
 		}
