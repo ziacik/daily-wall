@@ -5,6 +5,9 @@
 	"references": [
 		{
 			"path": "./ai-wallpaper"
+		},
+		{
+			"path": "./ai-wallpaper-android"
 		}
 	]
 }
