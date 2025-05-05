@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
+	ActivityIndicator,
 	Alert,
+	Image,
 	SafeAreaView,
 	ScrollView,
 	StatusBar,
@@ -19,6 +21,10 @@ export const App = () => {
 	const [apiKey, setApiKey] = useState('');
 	const [isApiKeyConfigured, setIsApiKeyConfigured] = useState(false);
 	const [showApiKey, setShowApiKey] = useState(false);
+	const [currentWallpaperUri, setCurrentWallpaperUri] = useState<string | null>(
+		null
+	);
+	const [hasWallpaper, setHasWallpaper] = useState(false);
 
 	// Check configuration when app starts
 	useEffect(() => {
@@ -37,6 +43,9 @@ export const App = () => {
 					const key = await WallpaperModule.getApiKey();
 					setApiKey(key);
 				}
+
+				// Check for existing wallpaper
+				await loadWallpaperPreview();
 			} catch (error) {
 				console.error('Error checking configuration:', error);
 			}
@@ -44,6 +53,26 @@ export const App = () => {
 
 		checkConfig();
 	}, []);
+
+	// Function to load the current wallpaper preview
+	const loadWallpaperPreview = async () => {
+		try {
+			// Check if a wallpaper exists
+			const hasCurrentWallpaper = await WallpaperModule.hasCurrentWallpaper();
+			setHasWallpaper(hasCurrentWallpaper);
+
+			if (hasCurrentWallpaper) {
+				// Get the path to the current wallpaper
+				const wallpaperPath = await WallpaperModule.getCurrentWallpaperPath();
+				setCurrentWallpaperUri(wallpaperPath);
+			} else {
+				setCurrentWallpaperUri(null);
+			}
+		} catch (error) {
+			console.error('Error loading wallpaper preview:', error);
+			setCurrentWallpaperUri(null);
+		}
+	};
 
 	const generateWallpaper = async () => {
 		// Check if API key is configured
@@ -59,6 +88,8 @@ export const App = () => {
 		try {
 			const success = await WallpaperModule.generateWallpaper();
 			if (success) {
+				// Load the new wallpaper preview
+				await loadWallpaperPreview();
 				setWallpaperStatus('success');
 			} else {
 				setWallpaperStatus('error');
@@ -189,14 +220,27 @@ export const App = () => {
 					</View>
 
 					<View style={styles.previewContainer}>
-						{wallpaperStatus === 'success' ? (
-							<View style={styles.wallpaperPreview}>
-								<Text style={styles.previewText}>Wallpaper Preview</Text>
-								{/* Placeholder for wallpaper image */}
-								<View style={styles.placeholderImage} />
-								<Text style={styles.statusText}>
-									Wallpaper generated successfully!
+						<Text style={styles.previewText}>Wallpaper Preview</Text>
+
+						{wallpaperStatus === 'generating' ? (
+							<View style={styles.loadingContainer}>
+								<ActivityIndicator size="large" color="#143055" />
+								<Text style={styles.generatingText}>
+									Generating wallpaper...
 								</Text>
+							</View>
+						) : hasWallpaper && currentWallpaperUri ? (
+							<View style={styles.wallpaperPreview}>
+								<Image
+									source={{ uri: currentWallpaperUri }}
+									style={styles.wallpaperImage}
+									resizeMode="contain"
+								/>
+								{wallpaperStatus === 'success' && (
+									<Text style={styles.statusText}>
+										Wallpaper generated successfully!
+									</Text>
+								)}
 							</View>
 						) : wallpaperStatus === 'error' ? (
 							<View style={styles.placeholderContainer}>
@@ -207,9 +251,8 @@ export const App = () => {
 						) : (
 							<View style={styles.placeholderContainer}>
 								<Text style={styles.placeholderText}>
-									{wallpaperStatus === 'generating'
-										? 'Generating wallpaper...'
-										: 'Press the button below to generate a new wallpaper'}
+									No wallpaper generated yet. Press the button below to generate
+									a new wallpaper.
 								</Text>
 							</View>
 						)}
@@ -456,6 +499,21 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: '#D32F2F',
 		marginTop: 8,
+	},
+	wallpaperImage: {
+		width: '100%',
+		height: 300,
+		borderRadius: 8,
+	},
+	loadingContainer: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 300,
+	},
+	generatingText: {
+		marginTop: 16,
+		fontSize: 16,
+		color: '#143055',
 	},
 });
 

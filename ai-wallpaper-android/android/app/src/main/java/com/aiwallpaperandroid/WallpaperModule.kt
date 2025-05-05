@@ -6,6 +6,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import java.io.File
 
 /**
  * React Native module that exposes wallpaper generation functionality to JavaScript
@@ -128,6 +129,41 @@ class WallpaperModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         } catch (e: Exception) {
             Log.e(TAG, "Error checking if API key is configured", e)
             promise.reject("ERROR_CHECKING_API_KEY", e.message, e)
+        }
+    }
+    
+    /**
+     * Get the path to the current wallpaper image file
+     */
+    @ReactMethod
+    fun getCurrentWallpaperPath(promise: Promise) {
+        try {
+            val currentWallpaperFile = File(reactApplicationContext.filesDir, "current_wallpaper.jpg")
+            
+            if (currentWallpaperFile.exists()) {
+                // Return the file URI that can be used by React Native Image component
+                val fileUri = "file://${currentWallpaperFile.absolutePath}"
+                promise.resolve(fileUri)
+            } else {
+                promise.resolve(null)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting current wallpaper path", e)
+            promise.reject("ERROR_GETTING_PATH", e.message, e)
+        }
+    }
+    
+    /**
+     * Check if a wallpaper image exists
+     */
+    @ReactMethod
+    fun hasCurrentWallpaper(promise: Promise) {
+        try {
+            val currentWallpaperFile = File(reactApplicationContext.filesDir, "current_wallpaper.jpg")
+            promise.resolve(currentWallpaperFile.exists())
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking if wallpaper exists", e)
+            promise.reject("ERROR_CHECKING_WALLPAPER", e.message, e)
         }
     }
 }

@@ -56,7 +56,7 @@ class OpenAIClient {
         val request = ImageGenerationRequest(
             model = "dall-e-3",
             prompt = prompt,
-            size = "1792x1024"
+            size = "1024x1792"
         )
 
         try {
