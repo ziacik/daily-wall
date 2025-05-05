@@ -7,6 +7,7 @@ import {
 	StyleSheet,
 	Switch,
 	Text,
+	TextInput,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -15,22 +16,45 @@ import WallpaperModule from './modules/WallpaperModule';
 export const App = () => {
 	const [wallpaperStatus, setWallpaperStatus] = useState('idle');
 	const [isScheduled, setIsScheduled] = useState(false);
+	const [apiKey, setApiKey] = useState('');
+	const [isApiKeyConfigured, setIsApiKeyConfigured] = useState(false);
+	const [showApiKey, setShowApiKey] = useState(false);
 
-	// Check if wallpaper generation is scheduled when app starts
+	// Check configuration when app starts
 	useEffect(() => {
-		const checkScheduleStatus = async () => {
+		const checkConfig = async () => {
 			try {
+				// Check schedule status
 				const scheduled = await WallpaperModule.isDailyWallpaperScheduled();
 				setIsScheduled(scheduled);
+
+				// Check API key status
+				const hasApiKey = await WallpaperModule.isApiKeyConfigured();
+				setIsApiKeyConfigured(hasApiKey);
+
+				// Load stored API key if any
+				if (hasApiKey) {
+					const key = await WallpaperModule.getApiKey();
+					setApiKey(key);
+				}
 			} catch (error) {
-				console.error('Error checking wallpaper schedule:', error);
+				console.error('Error checking configuration:', error);
 			}
 		};
 
-		checkScheduleStatus();
+		checkConfig();
 	}, []);
 
 	const generateWallpaper = async () => {
+		// Check if API key is configured
+		if (!isApiKeyConfigured) {
+			Alert.alert(
+				'API Key Required',
+				'Please configure your OpenAI API key first.'
+			);
+			return;
+		}
+
 		setWallpaperStatus('generating');
 		try {
 			const success = await WallpaperModule.generateWallpaper();
@@ -48,6 +72,15 @@ export const App = () => {
 	};
 
 	const toggleSchedule = async (value: boolean) => {
+		// Check if API key is configured first
+		if (value && !isApiKeyConfigured) {
+			Alert.alert(
+				'API Key Required',
+				'Please configure your OpenAI API key first.'
+			);
+			return;
+		}
+
 		try {
 			if (value) {
 				const success = await WallpaperModule.scheduleDailyWallpaper();
@@ -75,6 +108,26 @@ export const App = () => {
 		}
 	};
 
+	const saveApiKey = async () => {
+		if (!apiKey.trim()) {
+			Alert.alert('Error', 'API key cannot be empty');
+			return;
+		}
+
+		try {
+			const success = await WallpaperModule.setApiKey(apiKey.trim());
+			if (success) {
+				setIsApiKeyConfigured(true);
+				Alert.alert('Success', 'API key saved successfully');
+			} else {
+				Alert.alert('Error', 'Failed to save API key');
+			}
+		} catch (error) {
+			console.error('Error saving API key:', error);
+			Alert.alert('Error', 'Failed to save API key: ' + error.message);
+		}
+	};
+
 	return (
 		<>
 			<StatusBar barStyle="dark-content" />
@@ -87,6 +140,51 @@ export const App = () => {
 						<Text style={styles.title}>AI Wallpaper Generator</Text>
 						<Text style={styles.subtitle}>
 							Create a new wallpaper every day
+						</Text>
+					</View>
+
+					<View style={styles.apiKeyContainer}>
+						<Text style={styles.infoTitle}>OpenAI API Configuration</Text>
+						<Text style={styles.infoText}>
+							Enter your OpenAI API key to enable AI-powered wallpaper
+							generation. You can get an API key from the OpenAI website.
+						</Text>
+
+						<View style={styles.apiKeyInputContainer}>
+							<TextInput
+								style={styles.apiKeyInput}
+								value={apiKey}
+								onChangeText={setApiKey}
+								placeholder="Enter your OpenAI API key"
+								placeholderTextColor="#999"
+								secureTextEntry={!showApiKey}
+							/>
+							<TouchableOpacity
+								style={styles.visibilityToggle}
+								onPress={() => setShowApiKey(!showApiKey)}
+							>
+								<Text style={styles.visibilityToggleText}>
+									{showApiKey ? 'Hide' : 'Show'}
+								</Text>
+							</TouchableOpacity>
+						</View>
+
+						<TouchableOpacity
+							style={styles.saveApiKeyButton}
+							onPress={saveApiKey}
+						>
+							<Text style={styles.buttonText}>Save API Key</Text>
+						</TouchableOpacity>
+
+						<Text
+							style={[
+								styles.apiKeyStatus,
+								isApiKeyConfigured && styles.apiKeyConfigured,
+							]}
+						>
+							{isApiKeyConfigured
+								? '✓ API key configured'
+								: '✗ API key not configured'}
 						</Text>
 					</View>
 
@@ -120,10 +218,11 @@ export const App = () => {
 					<TouchableOpacity
 						style={[
 							styles.generateButton,
-							wallpaperStatus === 'generating' && styles.generatingButton,
+							(wallpaperStatus === 'generating' || !isApiKeyConfigured) &&
+								styles.disabledButton,
 						]}
 						onPress={generateWallpaper}
-						disabled={wallpaperStatus === 'generating'}
+						disabled={wallpaperStatus === 'generating' || !isApiKeyConfigured}
 					>
 						<Text style={styles.generateButtonText}>
 							{wallpaperStatus === 'generating'
@@ -149,6 +248,7 @@ export const App = () => {
 								onValueChange={toggleSchedule}
 								trackColor={{ false: '#767577', true: '#81b0ff' }}
 								thumbColor={isScheduled ? '#143055' : '#f4f3f4'}
+								disabled={!isApiKeyConfigured}
 							/>
 						</View>
 
@@ -157,6 +257,12 @@ export const App = () => {
 								? 'Daily wallpaper generation is enabled. A new wallpaper will be created every day.'
 								: 'Daily wallpaper generation is disabled.'}
 						</Text>
+
+						{!isApiKeyConfigured && (
+							<Text style={styles.warningText}>
+								API key required for scheduling daily wallpapers.
+							</Text>
+						)}
 					</View>
 				</ScrollView>
 			</SafeAreaView>
@@ -188,6 +294,62 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: '#FFFFFF',
 		opacity: 0.8,
+	},
+	apiKeyContainer: {
+		marginTop: 24,
+		marginHorizontal: 16,
+		padding: 16,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 16,
+		elevation: 2,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+	},
+	apiKeyInputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: '#DDDDDD',
+		borderRadius: 8,
+		marginTop: 8,
+		marginBottom: 16,
+	},
+	apiKeyInput: {
+		flex: 1,
+		padding: 12,
+		fontSize: 16,
+		color: '#333',
+	},
+	visibilityToggle: {
+		paddingHorizontal: 12,
+		paddingVertical: 8,
+	},
+	visibilityToggleText: {
+		color: '#143055',
+		fontWeight: 'bold',
+	},
+	saveApiKeyButton: {
+		backgroundColor: '#143055',
+		borderRadius: 8,
+		paddingVertical: 12,
+		alignItems: 'center',
+		marginBottom: 8,
+	},
+	buttonText: {
+		color: '#FFFFFF',
+		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	apiKeyStatus: {
+		fontSize: 14,
+		color: '#D32F2F',
+		textAlign: 'center',
+		marginTop: 8,
+	},
+	apiKeyConfigured: {
+		color: '#4CAF50',
 	},
 	previewContainer: {
 		marginTop: 24,
@@ -245,7 +407,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 16,
 		alignItems: 'center',
 	},
-	generatingButton: {
+	disabledButton: {
 		backgroundColor: '#999',
 	},
 	generateButtonText: {
@@ -289,6 +451,11 @@ const styles = StyleSheet.create({
 		color: '#666',
 		marginTop: 8,
 		fontStyle: 'italic',
+	},
+	warningText: {
+		fontSize: 14,
+		color: '#D32F2F',
+		marginTop: 8,
 	},
 });
 

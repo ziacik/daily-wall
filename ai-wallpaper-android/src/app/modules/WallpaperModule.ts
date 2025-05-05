@@ -6,6 +6,10 @@ interface WallpaperModuleInterface {
 	scheduleDailyWallpaper: () => Promise<boolean>;
 	cancelDailyWallpaper: () => Promise<boolean>;
 	isDailyWallpaperScheduled: () => Promise<boolean>;
+	// New API key management methods
+	setApiKey: (apiKey: string) => Promise<boolean>;
+	getApiKey: () => Promise<string>;
+	isApiKeyConfigured: () => Promise<boolean>;
 }
 
 // Get the native module
@@ -33,6 +37,21 @@ const WallpaperModule: WallpaperModuleInterface =
 					);
 				},
 				isDailyWallpaperScheduled: async () => {
+					return Promise.reject(
+						new Error('WallpaperModule is only available on Android')
+					);
+				},
+				setApiKey: async () => {
+					return Promise.reject(
+						new Error('WallpaperModule is only available on Android')
+					);
+				},
+				getApiKey: async () => {
+					return Promise.reject(
+						new Error('WallpaperModule is only available on Android')
+					);
+				},
+				isApiKeyConfigured: async () => {
 					return Promise.reject(
 						new Error('WallpaperModule is only available on Android')
 					);

@@ -1,6 +1,7 @@
 package com.aiwallpaperandroid
 
 import android.util.Log
+import com.aiwallpaperandroid.config.ConfigManager
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -12,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod
 class WallpaperModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
     private val wallpaperScheduler = WallpaperScheduler(reactContext)
+    private val configManager = ConfigManager(reactContext)
     
     companion object {
         private const val TAG = "WallpaperModule"
@@ -84,6 +86,48 @@ class WallpaperModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         } catch (e: Exception) {
             Log.e(TAG, "Error checking if daily wallpaper is scheduled", e)
             promise.reject("ERROR_CHECKING", e.message, e)
+        }
+    }
+    
+    /**
+     * Save OpenAI API key
+     */
+    @ReactMethod
+    fun setApiKey(apiKey: String, promise: Promise) {
+        try {
+            configManager.setApiKey(apiKey)
+            promise.resolve(true)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting API key", e)
+            promise.reject("ERROR_SETTING_API_KEY", e.message, e)
+        }
+    }
+    
+    /**
+     * Get OpenAI API key (may be empty if not set)
+     */
+    @ReactMethod
+    fun getApiKey(promise: Promise) {
+        try {
+            val apiKey = configManager.getApiKey()
+            promise.resolve(apiKey)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting API key", e)
+            promise.reject("ERROR_GETTING_API_KEY", e.message, e)
+        }
+    }
+    
+    /**
+     * Check if API key is configured
+     */
+    @ReactMethod
+    fun isApiKeyConfigured(promise: Promise) {
+        try {
+            val apiKey = configManager.getApiKey()
+            promise.resolve(apiKey.isNotEmpty())
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking if API key is configured", e)
+            promise.reject("ERROR_CHECKING_API_KEY", e.message, e)
         }
     }
 }
